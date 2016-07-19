@@ -12,7 +12,7 @@ class mask
     backgroundColor: "#000"
   }
   constructor: (@options)->
-    @options = $.extend(@defaultOptions, @options)
+    @options = $.extend({}, @defaultOptions, @options)
   do: (funName, content)->
     @options[funName].call(@, content) if $.isFunction(@options[funName])
   createMask: ->

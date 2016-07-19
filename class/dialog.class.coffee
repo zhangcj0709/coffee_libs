@@ -13,7 +13,7 @@ class myDialog
   @CLASS_POPUP_INPUT: "popup-input"
 
   @popupStack = []
-  @backdrop = require("class/mask.class")()
+  @backdrop = require("class/mask.class")({zIndex:9999})
   @createInput = (placeholder)->
     return '<div class="' + @CLASS_POPUP_INPUT + '"><input type="text" autofocus placeholder="' + (placeholder || '') + '"/></div>'
   @createInner = (message, title, extra)->
