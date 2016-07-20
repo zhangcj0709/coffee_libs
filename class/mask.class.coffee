@@ -30,18 +30,18 @@ class mask
   show: (callback)->
     $(@maskElement).show()
     $(@options.container).css("overflow","hidden")
-    event = new Event("custom-mask")
-    event.srcElement = event.target = @maskElement
-    @do("_onShowMask", event)
-    callback.call(@, event) if $.isFunction(callback)
+    #event = new Event("custom-mask")
+    #event.srcElement = event.target = @maskElement
+    @do("_onShowMask")
+    callback.call(@) if $.isFunction(callback)
     return @
   hide: (callback)->
     $(@maskElement).hide()
     $(@options.container).css("overflow","")
-    event = new Event("custom-mask")
-    event.srcElement = event.target = @maskElement
-    @do("_onHideMask", event)
-    callback.call(@, event) if $.isFunction(callback)
+    #event = new Event("custom-mask")
+    #event.srcElement = event.target = @maskElement
+    @do("_onHideMask")
+    callback.call(@) if $.isFunction(callback)
     return @
 
 
