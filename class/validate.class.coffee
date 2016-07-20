@@ -75,18 +75,21 @@ window.myValidate = class validate
     else
       $(field).removeClass(@options.errorClass)
 
-  raiseField: (field, callback, mode)->
+  raiseField: (field, callback, mode, handleName)->
     error = ""
-    for handleName of field.myValidateResults
+    if handleName
       result = field.myValidateResults[handleName]
-      if result and !result.success
-        $field = $(field)
-        $field.attr("data-valid", result.success)
-        $field.attr("data-error", result.message)
-        error = result.message
-        @addErrorClass(field)
-        callback.call(field, result, mode) if $.isFunction(callback)
-        break
+    else
+      for _handleName of field.myValidateResults
+        result = field.myValidateResults[_handleName]
+        break unless result.success
+    if result and !result.success
+      $field = $(field)
+      $field.attr("data-valid", result.success)
+      $field.attr("data-error", result.message)
+      error = result.message
+      @addErrorClass(field)
+      callback.call(field, result, mode) if $.isFunction(callback)
     return error
 
   raiseForm: (callback, mode)->
@@ -96,16 +99,16 @@ window.myValidate = class validate
       field =  @fields[fieldName]
       result = {success:true, message:""}
       handles = field.myValidateHandles 
-      for handleName of handles
-        handle = handles[handleName]
+      for index of handles
+        handle = handles[index]
         if handle.fieldSet and handle.fieldSet.length and !handle.fieldSet.type and field.type isnt "checkbox" and field.type isnt "radio"
           $.each handle.fieldSet, ->
-            error = that.raiseField(this, callback, mode)
+            error = that.raiseField(this, callback, mode, "#{handle.fieldName}-#{handle.ruleName}")
             if error
               formResult.success = false
               formResult.message += "#{error}<br>"
         else
-          error = that.raiseField(handle.field, callback, mode)
+          error = that.raiseField(handle.field, callback, mode, "#{handle.fieldName}-#{handle.ruleName}")
           if error
             formResult.success = false
             formResult.message += "#{error}<br>"
@@ -118,8 +121,8 @@ window.myValidate = class validate
   resetField: (field, callback)->
     field.myValidateResults = null
     handles = field.myValidateHandles 
-    for handleName of field.myValidateHandles 
-      handle = handles[handleName]
+    for index of field.myValidateHandles 
+      handle = handles[index]
       handle.result = null;
     $field = $(field)
     $field.removeAttr("data-valid")
@@ -149,8 +152,8 @@ window.myValidate = class validate
     that.form.on "#{listener}", "#{selector}", (e)->
       handles = field.myValidateHandles
       that.resetField(this, that.options.clearError)
-      for name of handles
-        handle = handles[name]
+      for index of handles
+        handle = handles[index]
         break unless that.callRule(this, handle)
       that.raiseField(this, that.options.showError, listener)
       true
@@ -177,8 +180,8 @@ window.myValidate = class validate
         listener = if (field.type is "checkbox" or field.type is "radio") then "change" else "blur"
         @addlistener(field, listener) unless field.myValidateListener[listener]
       handles = field.myValidateHandles
-      for handleName of handles
-        handle = handles[handleName]
+      for index of handles
+        handle = handles[index]
         if handle.fieldSet and handle.fieldSet.length and !handle.fieldSet.type
           breakFlag = false
           $.each handle.fieldSet, ->
