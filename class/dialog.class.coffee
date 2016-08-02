@@ -28,7 +28,7 @@ class myDialog
   @createPopup: (html, callback, extend)->
     that = @
     popupElement = document.createElement('div')
-    popupElement.className = @CLASS_POPUP
+    popupElement.className = @CLASS_POPUP + " #{if extend? and extend.class then extend.class}"
     popupElement.innerHTML = html
     popupElement.style.width = extend.width if extend? and extend.width
 
