@@ -241,10 +241,12 @@ validate.addRule "number", "请输入有效的数字！", (parameter)->
 
 validate.addRule "max", "请输入小于$3的数字！", (parameter)->
   max = parseFloat(parameter)
+  return true unless this.value
   return !isNaN(this.value) and parseFloat(this.value) <= max
 
 validate.addRule "min", "请输入大于$3的数字！", (parameter)->
   min = parseFloat(parameter)
+  return true unless this.value
   return !isNaN(this.value) and parseFloat(this.value) >= min
 
 validate.addRule "equal", "请输入和$3相同的值！", (parameter)->
