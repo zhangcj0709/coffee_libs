@@ -97,6 +97,10 @@ class myDialog
     return @createPopup(@createInner(message, title) + @createButtons(btnArray || ['取消', '确认']), callback, extend)
   @createPrompt: (message, placeholder, title, btnArray, callback, extend)->
     title? and (title = title || '提示')
-    return @createPopup(@createInner(message, title, @createInput(placeholder, extend.type, extend.value)) + @createButtons(btnArray || ['取消', '确认']), callback, extend)
-
+    popup = @createPopup(@createInner(message, title, @createInput(placeholder, extend.type, extend.value)) + @createButtons(btnArray || ['取消', '确认']), callback, extend)
+    #自动在结尾处获取光标
+    setTimeout ->
+      (input = popup.element.querySelector("input")).focus() or input.value = input.value
+    , 0
+    return popup
 module.exports = myDialog
