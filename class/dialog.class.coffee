@@ -14,10 +14,14 @@ class myDialog
 
   @popupStack = []
   @backdrop = require("class/mask.class")({zIndex:9999})
-  @createInput = (placeholder)->
-    return '<div class="' + @CLASS_POPUP_INPUT + '"><input type="text" autofocus placeholder="' + (placeholder || '') + '"/></div>'
+  @createInput = (placeholder, type, value)->
+    return '<div class="' + @CLASS_POPUP_INPUT + '"><input type="'+ (type || 'text') + '" autofocus placeholder="' + (placeholder || '') + '" value="' + (value || '') + '"/></div>'
   @createInner = (message, title, extra)->
-    return '<div class="' + @CLASS_POPUP_INNER + '"><div class="' + @CLASS_POPUP_TITLE + '">' + (title || '') + '</div><div class="' + @CLASS_POPUP_TEXT + '">' + message + '</div>' + (extra || '') + '</div>'
+    res = '<div class="' + @CLASS_POPUP_INNER + '">'
+    res += '<div class="' + @CLASS_POPUP_TITLE + '">' + (title || '') + '</div>' if title
+    res += '<div class="' + @CLASS_POPUP_TEXT + '">' + message + '</div>'
+    res += (extra || '') + '</div>'
+    return res
   @createButtons = (btnArray)->
     return "" unless btnArray and btnArray.length > 0
     length = btnArray.length
@@ -93,6 +97,6 @@ class myDialog
     return @createPopup(@createInner(message, title) + @createButtons(btnArray || ['取消', '确认']), callback, extend)
   @createPrompt: (message, placeholder, title, btnArray, callback, extend)->
     title? and (title = title || '提示')
-    return @createPopup(@createInner(message, title, @createInput(placeholder)) + @createButtons(btnArray || ['取消', '确认']), callback, extend)
+    return @createPopup(@createInner(message, title, @createInput(placeholder, extend.type, extend.value)) + @createButtons(btnArray || ['取消', '确认']), callback, extend)
 
 module.exports = myDialog
