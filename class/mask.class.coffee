@@ -27,9 +27,12 @@ class mask
     @maskElement = $mask[0]
     $(@options.container).append(@maskElement)
     return @
+  preventTouchmove: (e)->
+    e.preventDefault()
   show: (callback)->
     $(@maskElement).show()
     $(@options.container).css("overflow","hidden")
+    $(@options.container).on "touchmove", @preventTouchmove
     #event = new Event("custom-mask")
     #event.srcElement = event.target = @maskElement
     @do("_onShowMask")
@@ -38,6 +41,7 @@ class mask
   hide: (callback)->
     $(@maskElement).hide()
     $(@options.container).css("overflow","")
+    $(@options.container).off "touchmove", @preventTouchmove
     #event = new Event("custom-mask")
     #event.srcElement = event.target = @maskElement
     @do("_onHideMask")
